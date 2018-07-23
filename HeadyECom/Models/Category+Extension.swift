@@ -32,11 +32,6 @@ extension Category {
         }
     }
     
-    public override func awakeFromInsert() {
-        super.awakeFromInsert()
-        self.isSubCategory = false
-    }
-    
     static func fetchObjects<T: NSManagedObject>(from entityClass: T.Type, moc: NSManagedObjectContext, predicate: NSPredicate? = nil) -> [T]? {
         
         let entityName = String(describing: T.self)
@@ -82,7 +77,6 @@ extension Category {
                     let predicate = NSPredicate(format: "id IN %@", subCategoriesJSON.map { "\($0.intValue)" })
                     if let subCategories = fetchObjects(from: Category.self, moc: moc, predicate: predicate), subCategories.isNotEmpty {
                         for subCategory in subCategories {
-                            subCategory.isSubCategory = true
                             subCategory.parentID = category.id
                             category.addToSubCategory(subCategory)
                         }

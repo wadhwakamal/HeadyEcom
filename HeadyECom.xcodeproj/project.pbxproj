@@ -11,7 +11,7 @@
 		3557D8759C2759E7FDEFD434 /* Pods_HeadyECom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E0206C9FEC6D50BEF25AE6D /* Pods_HeadyECom.framework */; };
 		560C41269515C235F87B8BC2 /* Pods_HeadyEComTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC0D9294D59F1A5FE548FA8 /* Pods_HeadyEComTests.framework */; };
 		7B46B3A421048936005E03E4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46B3A321048936005E03E4 /* AppDelegate.swift */; };
-		7B46B3A621048936005E03E4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46B3A521048936005E03E4 /* ViewController.swift */; };
+		7B46B3A621048936005E03E4 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B46B3A521048936005E03E4 /* CategoryViewController.swift */; };
 		7B46B3A921048936005E03E4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B46B3A721048936005E03E4 /* Main.storyboard */; };
 		7B46B3AC21048936005E03E4 /* HeadyECom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7B46B3AA21048936005E03E4 /* HeadyECom.xcdatamodeld */; };
 		7B46B3AE21048936005E03E4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B46B3AD21048936005E03E4 /* Assets.xcassets */; };
@@ -48,7 +48,7 @@
 		5FF75D861D5C13D0028870E1 /* Pods-HeadyEComUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HeadyEComUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HeadyEComUITests/Pods-HeadyEComUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7B46B3A021048936005E03E4 /* HeadyECom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadyECom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B46B3A321048936005E03E4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7B46B3A521048936005E03E4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7B46B3A521048936005E03E4 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		7B46B3A821048936005E03E4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7B46B3AB21048936005E03E4 /* HeadyECom.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HeadyECom.xcdatamodel; sourceTree = "<group>"; };
 		7B46B3AD21048936005E03E4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 				7B46B3FF2104BED1005E03E4 /* SwiftExtensions.swift */,
 				7B46B3F82104B9DB005E03E4 /* Models */,
 				7B46B3A321048936005E03E4 /* AppDelegate.swift */,
-				7B46B3A521048936005E03E4 /* ViewController.swift */,
+				7B46B3A521048936005E03E4 /* CategoryViewController.swift */,
 				7B46B3F42104B8C6005E03E4 /* NetworkManager.swift */,
 				7B46B3A721048936005E03E4 /* Main.storyboard */,
 				7B46B3AD21048936005E03E4 /* Assets.xcassets */,
@@ -404,7 +404,7 @@
 			files = (
 				7B46B3F52104B8C6005E03E4 /* NetworkManager.swift in Sources */,
 				7B46B3AC21048936005E03E4 /* HeadyECom.xcdatamodeld in Sources */,
-				7B46B3A621048936005E03E4 /* ViewController.swift in Sources */,
+				7B46B3A621048936005E03E4 /* CategoryViewController.swift in Sources */,
 				7B46B3FE2104BB05005E03E4 /* Category+Extension.swift in Sources */,
 				7B46B3A421048936005E03E4 /* AppDelegate.swift in Sources */,
 				7B46B4002104BED1005E03E4 /* SwiftExtensions.swift in Sources */,

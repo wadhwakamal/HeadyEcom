@@ -2,8 +2,8 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17F77" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Category" representedClassName="Category" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isSubCategory" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parentID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Product" inverseName="category" inverseEntity="Product" syncable="YES"/>
         <relationship name="subCategory" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="subCategory" inverseEntity="Category" syncable="YES"/>
         <uniquenessConstraints>
@@ -39,7 +39,6 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="SubCategory" representedClassName="SubCategory" parentEntity="Category" syncable="YES" codeGenerationType="class"/>
     <entity name="Variant" representedClassName="Variant" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
@@ -53,10 +52,9 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Category" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="Category" positionX="-63" positionY="-18" width="128" height="30"/>
         <element name="Product" positionX="-45" positionY="27" width="128" height="210"/>
         <element name="Ranking" positionX="-18" positionY="117" width="128" height="75"/>
-        <element name="SubCategory" positionX="-9" positionY="135" width="128" height="45"/>
         <element name="Variant" positionX="-36" positionY="63" width="128" height="120"/>
     </elements>
 </model>
