@@ -18,8 +18,6 @@ class NetworkManager {
             let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         let wmoc = appDelegate.persistentContainer.newBackgroundContext()
-        let moc = appDelegate.persistentContainer.viewContext
-        
         wmoc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         Category.fromJSON(json: json, moc: wmoc)
@@ -29,11 +27,6 @@ class NetworkManager {
             if wmoc.hasChanges {
                 try wmoc.save()
             }
-            
-            if moc.hasChanges {
-                try moc.save()
-            }
-            
             completion()
         } catch {
             print(error)

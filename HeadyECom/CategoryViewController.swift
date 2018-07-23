@@ -14,13 +14,10 @@ enum ContentType {
 }
 
 class CategoryViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     var parentCategory: Category?
-    
-    var categories = [Category]()
-    var products = [Product]()
     var contentType = ContentType.none
     
     lazy var categoryResults: NSFetchedResultsController<Category> = {
@@ -29,13 +26,13 @@ class CategoryViewController: UIViewController {
         
         let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-
+        
         if let category = parentCategory, let parentID = category.id {
             fetchRequest.predicate = NSPredicate(format: "parentID == %@", parentID)
         } else {
             fetchRequest.predicate = NSPredicate(format: "parentID == nil")
         }
-
+        
         let resultsController = NSFetchedResultsController<Category>(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         resultsController.delegate = self
         
@@ -53,7 +50,6 @@ class CategoryViewController: UIViewController {
         super.viewDidAppear(animated)
         if parentCategory == nil {
             NetworkManager.fetchProducts { [weak self] in
-//                tableView.reloadData()
                 
             }
         }
@@ -62,24 +58,9 @@ class CategoryViewController: UIViewController {
     func setupContent() {
         do {
             try categoryResults.performFetch()
-            
-            if let categories = categoryResults.fetchedObjects {
-                self.categories = categories
-            }
-            
-            if let category = parentCategory, let products = category.products?.allObjects as? [Product] {
-                self.products = products
-            }
-
-//            tableView.reloadData()
         } catch {
             print("Unable to fetch Category Data \(error)")
         }
-//        NotificationCenter.default.addObserver(self, selector: #selector(CategoryViewController.reloadData), name: NSNotification.Name("NSManagedObjectContextDidSave"), object: nil)
-    }
-    
-    @objc func reloadData() {
-//        self.tableView.reloadData()
     }
     
     @objc func didTapCart() {
@@ -97,27 +78,26 @@ class CategoryViewController: UIViewController {
         self.setupContent()
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
 extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if categories.count > 0 {
-            contentType = .category
-            return categories.count
-        }
-        
-        if products.count > 0 {
-            contentType = .product
-            return products.count
+        if let sections = categoryResults.sections {
+            let currentSection = sections[section]
+            
+            if currentSection.numberOfObjects > 0 {
+                contentType = .category
+                return currentSection.numberOfObjects
+            } else if let products = parentCategory?.products?.allObjects as? [Product], products.count > 0 {
+                contentType = .product
+                return products.count
+            }
         }
         
         return 0
@@ -128,32 +108,33 @@ extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
         
         switch contentType {
         case .category:
-            let category = categories[indexPath.row]
-            cell.textLabel?.text = category.name
-            cell.detailTextLabel?.text = ""
-            
-            if let subCategory = category.subCategory {
-                cell.detailTextLabel?.text = (Array(subCategory) as! [Category]).flatMap { $0.name }.joined(separator: "-")
-            }
+            configureCategoryCell(cell, indexPath: indexPath)
         case .product:
-            let product = products[indexPath.row]
-            cell.textLabel?.text = product.name
-            cell.detailTextLabel?.text = nil
-            
+            configureProductCell(cell, indexPath: indexPath)
         default:
             assert(false, "Content type is not handled properly. Please check the data in categories and products. Also make sure proper contentType is implemented")
         }
         return cell
     }
     
+    func configureCategoryCell(_ cell: UITableViewCell, indexPath: IndexPath) {
+        let category = categoryResults.object(at: indexPath)
+        cell.textLabel?.text = category.name
+    }
+    
+    func configureProductCell(_ cell: UITableViewCell, indexPath: IndexPath) {
+        guard let product = parentCategory?.products?.allObjects[indexPath.row] as? Product else { return }
+        cell.textLabel?.text = product.name
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         switch contentType {
         case .category:
-            let category = categories[indexPath.row]
+            let category = categoryResults.object(at: indexPath)
             segueToSubCategory(category: category)
         case .product:
-            let product = products[indexPath.row]
+            guard let product = parentCategory?.products?.allObjects[indexPath.row] as? Product else { return }
             segueToProduct(product: product)
         default:
             assert(false, "Content type is not handled properly. Please check the data in categories and products. Also make sure proper contentType is implemented")
@@ -184,15 +165,33 @@ extension CategoryViewController: NSFetchedResultsControllerDelegate {
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
+        switch (type) {
         case .insert:
-            tableView.insertRows(at: [newIndexPath!], with: .fade)
+            if let indexPath = newIndexPath {
+                tableView.insertRows(at: [indexPath], with: .fade)
+            }
+            break;
         case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .fade)
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            break;
         case .update:
-            tableView.reloadRows(at: [indexPath!], with: .fade)
+            if let indexPath = indexPath {
+                if let cell = tableView.cellForRow(at: indexPath) {
+                    configureCategoryCell(cell, indexPath: indexPath)
+                }
+            }
+            break;
         case .move:
-            tableView.moveRow(at: indexPath!, to: newIndexPath!)
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+            break;
         }
     }
     
