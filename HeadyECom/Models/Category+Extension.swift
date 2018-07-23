@@ -12,6 +12,26 @@ import CoreData
 
 extension Category {
     
+    struct Stack {
+        fileprivate var jsonArray: [JSON] = []
+        
+        var isEmpty: Bool {
+            return jsonArray.isEmpty
+        }
+        
+        var count: Int {
+            return jsonArray.count
+        }
+        
+        mutating func push(_ element: JSON) {
+            jsonArray.append(element)
+        }
+
+        mutating func pop() -> JSON? {
+            return jsonArray.popLast()
+        }
+    }
+    
     public override func awakeFromInsert() {
         super.awakeFromInsert()
         self.isSubCategory = false
@@ -42,35 +62,46 @@ extension Category {
         let kCategoriesNameKey: String = "name"
         
         var categories = [Category]()
+        var categoryStack = Stack()
+        
+        func createCategory(categoryJSON: JSON, moc: NSManagedObjectContext) {
+            if let category = NSEntityDescription.insertNewObject(forEntityName: "Category", into: moc) as? Category {
+                category.id = "\(categoryJSON[kCategoriesInternalIdentifierKey].intValue)"
+                category.name = categoryJSON[kCategoriesNameKey].string
+                
+                if let productsJSON = categoryJSON[kCategoriesProductsKey].array, productsJSON.isNotEmpty {
+                    for productJSON in productsJSON {
+                        if let product = NSEntityDescription.insertNewObject(forEntityName: "Product", into: moc) as? Product {
+                            product.populate(fromJSON: productJSON, moc: moc)
+                            category.addToProducts(product)
+                        }
+                    }
+                }
+                
+                if let subCategoriesJSON = categoryJSON[kCategoriesChildCategoriesKey].array, subCategoriesJSON.isNotEmpty {
+                    let predicate = NSPredicate(format: "id IN %@", subCategoriesJSON.map { "\($0.intValue)" })
+                    if let subCategories = fetchObjects(from: Category.self, moc: moc, predicate: predicate), subCategories.isNotEmpty {
+                        for subCategory in subCategories {
+                            subCategory.isSubCategory = true
+                            subCategory.parentID = category.id
+                            category.addToSubCategory(subCategory)
+                        }
+                    } else {
+                        categoryStack.push(categoryJSON)
+                    }
+                }
+                categories.append(category)
+            }
+        }
         
         if let categoriesJSON = json[kCategoryCategoriesKey].array {
             for categoryJSON in categoriesJSON {
-
-                if let category = NSEntityDescription.insertNewObject(forEntityName: "Category", into: moc) as? Category {
-                    category.id = "\(categoryJSON[kCategoriesInternalIdentifierKey].intValue)"
-                    category.name = categoryJSON[kCategoriesNameKey].string
-                    
-                    if let productsJSON = categoryJSON[kCategoriesProductsKey].array {
-                        for productJSON in productsJSON {
-                            if let product = NSEntityDescription.insertNewObject(forEntityName: "Product", into: moc) as? Product {
-                                product.populate(fromJSON: productJSON, moc: moc)
-                                category.addToProducts(product)
-                            }
-                        }
-                    }
-
-                    if let subCategoriesJSON = categoryJSON[kCategoriesChildCategoriesKey].array, subCategoriesJSON.isNotEmpty {
-                        let predicate = NSPredicate(format: "id IN %@", subCategoriesJSON.map { "\($0.intValue)" })
-                        if let subCategories = fetchObjects(from: Category.self, moc: moc, predicate: predicate) {
-                            for subCategory in subCategories {
-                                subCategory.isSubCategory = true
-                                category.addToSubCategory(subCategory)
-                            }
-//                            category.isSubCategory = true
-                        }
-                    }
-                    categories.append(category)
-                }
+                createCategory(categoryJSON: categoryJSON, moc: moc)
+            }
+            
+            while !categoryStack.isEmpty {
+                guard let categoryJSON = categoryStack.pop() else { continue }
+                createCategory(categoryJSON: categoryJSON, moc: moc)
             }
         }
         return categories
