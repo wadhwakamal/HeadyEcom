@@ -197,3 +197,50 @@ extension Ranking {
         return rankings
     }
 }
+
+extension Cart {
+    class func add(productID: String, variantID: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        let moc = appDelegate.persistentContainer.newBackgroundContext()
+        moc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        if let cart = NSEntityDescription.insertNewObject(forEntityName: "Cart", into: moc) as? Cart {
+            cart.productID = productID
+            cart.variantID = variantID
+            var predicate = NSPredicate(format: "id == %@", variantID)
+            if let variant = Category.fetchObjects(from: Variant.self, moc: moc, predicate: predicate)?.first {
+                cart.variant = variant
+            }
+            
+            predicate = NSPredicate(format: "id == %@", productID)
+            if let product = Category.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
+                cart.product = product
+            }
+        }
+        if moc.hasChanges {
+            do {
+                try moc.save()
+            } catch {
+                print(error)
+            }
+            
+        }
+    }
+    
+    class func clear() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        
+        let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
+        if let result = try? context.fetch(fetchRequest) {
+            for object in result {
+                context.delete(object)
+            }
+        }
+        do {
+            try context.save()
+        } catch {
+            print(error)
+        }
+    }
+}

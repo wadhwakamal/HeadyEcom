@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ProductTableViewCellDelegate: class {
-    func didTapBuyButton(variant: Variant)
+    func didTapBuyButton(variant: Variant, sender: UIButton)
 }
 
 class ProductTableViewCell: UITableViewCell {
@@ -33,11 +33,11 @@ class ProductTableViewCell: UITableViewCell {
         self.variant = variant
         indexImageView.imageWith(number: "\(index)")
         priceLabel.text = "\(variant.price)"
-        sizeLabel.text = "\(variant.size)"
+        sizeLabel.text = variant.size > 0 ? "\(variant.size)" : "NA"
         colorLabel.text = variant.color
     }
 
-    @IBAction func didTapBuyButton(_ sender: Any) {
-        delegate?.didTapBuyButton(variant: self.variant)
+    @IBAction func didTapBuyButton(_ sender: UIButton) {
+        delegate?.didTapBuyButton(variant: self.variant, sender: sender)
     }
 }

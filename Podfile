@@ -7,6 +7,7 @@ target 'HeadyECom' do
 
   # Pods for HeadyECom
   pod 'SwiftyJSON', '~> 4.0'
+  pod "MIBadgeButton-Swift", :git => 'https://github.com/mustafaibrahim989/MIBadgeButton-Swift.git', :branch => 'master'
 
   target 'HeadyEComTests' do
     inherit! :search_paths

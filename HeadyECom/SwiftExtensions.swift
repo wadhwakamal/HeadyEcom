@@ -197,3 +197,24 @@ extension UIView{
         self.transform = self.transform.rotated(by: angle)
     }
 }
+
+extension UIBarButtonItem {
+    
+    func animationZoom(scaleX: CGFloat, y: CGFloat) {
+        guard let view = self.value(forKey: "view") as? UIView else { return }
+        view.transform = CGAffineTransform(scaleX: scaleX, y: y)
+    }
+    
+    func animationRoted(angle : CGFloat) {
+        guard let view = self.value(forKey: "view") as? UIView else { return }
+        view.transform = view.transform.rotated(by: angle)
+    }
+    
+    var frame: CGRect? {
+        guard let view = self.value(forKey: "view") as? UIView else {
+            return nil
+        }
+        return view.frame
+    }
+    
+}

@@ -44,7 +44,10 @@ class ProductViewController: UIViewController {
     }
     
     @objc func didTapCart() {
-        print("CaRRT")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CartVC") as! CartViewController
+        vc.title = "Cart"
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func setupContent() {
@@ -61,6 +64,56 @@ class ProductViewController: UIViewController {
             self.variants = variants
         }
         
+    }
+    
+    func sendToCart(_ sender: UIButton) {
+        let buttonPosition : CGPoint = sender.convert(sender.bounds.origin, to: self.tableView)
+        
+        let indexPath = self.tableView.indexPathForRow(at: buttonPosition)!
+        
+        let cell = tableView.cellForRow(at: indexPath) as! ProductTableViewCell
+        
+        let imageViewPosition : CGPoint = cell.indexImageView.convert(cell.indexImageView.bounds.origin, to: self.view)
+        
+        
+        let imgViewTemp = UIImageView(frame: CGRect(x: imageViewPosition.x, y: imageViewPosition.y, width: cell.indexImageView.frame.size.width, height: cell.indexImageView.frame.size.height))
+        
+        imgViewTemp.image = cell.indexImageView.image
+        
+        animation(dummyView: imgViewTemp)
+    }
+    
+    func animation(dummyView : UIView)  {
+        self.view.addSubview(dummyView)
+        UIView.animate(withDuration: 1.0,
+                       animations: {
+                        dummyView.animationZoom(scaleX: 1.5, y: 1.5)
+        }, completion: { _ in
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                
+                dummyView.animationZoom(scaleX: 0.2, y: 0.2)
+                dummyView.animationRoted(angle: CGFloat(Double.pi))
+                
+                dummyView.frame.origin.x = self.view.bounds.width - 45
+                dummyView.frame.origin.y = self.navigationController!.navigationBar.bounds.height - 8
+                
+            }, completion: { _ in
+                
+                dummyView.removeFromSuperview()
+                
+                UIView.animate(withDuration: 1.0, animations: {
+                    
+//                    self.counterItem += 1
+//                    self.lableNoOfCartItem.text = "\(self.counterItem)"
+                    self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.4, y: 1.4)
+                }, completion: {_ in
+                    self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.0, y: 1.0)
+                })
+                
+            })
+            
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,8 +153,12 @@ extension ProductViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension ProductViewController: ProductTableViewCellDelegate {
-    func didTapBuyButton(variant: Variant) {
-        print(variant)
-        navigationItem.rightBarButtonItem?.addBadge(number: 1)
+    func didTapBuyButton(variant: Variant, sender: UIButton) {
+        guard let id = product.id, let variantID = variant.id else { return }
+        Cart.add(productID: id, variantID: variantID)
+        
+        sendToCart(sender)
+//        navigationItem.rightBarButtonItem?.addBadge(number: 1)
+        
     }
 }

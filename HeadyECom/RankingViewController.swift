@@ -41,9 +41,12 @@ class RankingViewController: UIViewController {
     }
     
     @objc func didTapCartBarButton() {
-        print("CaRRT")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CartVC") as! CartViewController
+        vc.title = "Cart"
+        navigationController?.pushViewController(vc, animated: true)
     }
-    
+
     @objc func didTapListBarButton() {
         showAction()
     }
