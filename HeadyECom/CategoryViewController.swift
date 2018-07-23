@@ -53,6 +53,7 @@ class CategoryViewController: UIViewController {
                 
             }
         }
+        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
     }
     
     func setupContent() {
@@ -79,6 +80,8 @@ class CategoryViewController: UIViewController {
         
         self.setupViews()
         self.setupContent()
+        
+        
         
     }
     

@@ -105,12 +105,19 @@ class RankingViewController: UIViewController {
             print("Unable to fetch Category Data \(error)")
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupViews()
         setupContent()
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

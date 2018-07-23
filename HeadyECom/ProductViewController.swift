@@ -103,9 +103,7 @@ class ProductViewController: UIViewController {
                 dummyView.removeFromSuperview()
                 
                 UIView.animate(withDuration: 1.0, animations: {
-                    
-//                    self.counterItem += 1
-//                    self.lableNoOfCartItem.text = "\(self.counterItem)"
+                    self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
                     self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.4, y: 1.4)
                 }, completion: {_ in
                     self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.0, y: 1.0)
@@ -119,6 +117,12 @@ class ProductViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
     }
 
     override func viewDidLoad() {

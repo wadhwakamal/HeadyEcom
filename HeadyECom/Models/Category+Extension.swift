@@ -199,6 +199,18 @@ extension Ranking {
 }
 
 extension Cart {
+    
+    class func itemCount() -> Int {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return 0 }
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        
+        let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
+        if let result = try? context.fetch(fetchRequest) {
+            return result.count
+        }
+        return 0
+    }
+    
     class func add(productID: String, variantID: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
