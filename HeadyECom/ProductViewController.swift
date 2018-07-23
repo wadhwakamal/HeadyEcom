@@ -19,9 +19,11 @@ class ProductViewController: UIViewController {
     var gradient: [CGColor]!
     var variants = [Variant]()
     
+    var cartButton: UIBarButtonItem!
+    
     func setupViews() {
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(ProductViewController.didTapCart))
+        cartButton = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(ProductViewController.didTapCart))
+        navigationItem.rightBarButtonItem = cartButton
 
         
         if let jsonData = stubbedResponse("gradient") {
@@ -100,5 +102,6 @@ extension ProductViewController: UITableViewDataSource, UITableViewDelegate {
 extension ProductViewController: ProductTableViewCellDelegate {
     func didTapBuyButton(variant: Variant) {
         print(variant)
+        navigationItem.rightBarButtonItem?.addBadge(number: 1)
     }
 }

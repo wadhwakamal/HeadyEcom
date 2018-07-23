@@ -45,18 +45,41 @@ class RankingViewController: UIViewController {
     }
     
     @objc func didTapListBarButton() {
-//        if let ranking = rankingFetchResultsController.fetchedObjects?[1], let name = ranking.name, let rankBy = ranking.rankBy {
-//            print(name)
-//            let predicate = NSPredicate(format: "\(rankBy) > 0")
-//            let sortDescriptor = NSSortDescriptor(key: rankBy, ascending: true)
-//            sortContent(predicate: predicate, sortDescriptors: [sortDescriptor])
-//        }
+        showAction()
+    }
+    
+    func showAction() {
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let productAction: UIAlertAction = UIAlertAction(title: "All Products", style: .default) { [weak self] action -> Void in
+            self?.setupContent()
+            self?.tableView.reloadData()
+        }
+        actionSheetController.addAction(productAction)
+        
+        for ranking in rankingFetchResultsController.fetchedObjects! {
+            guard let rankingName = ranking.name else { continue }
+            let action: UIAlertAction = UIAlertAction(title: rankingName, style: .default) { [weak self] action -> Void in
+                self?.sortContentBy(ranking: ranking)
+            }
+            actionSheetController.addAction(action)
+        }
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in }
+        
+        // add actions
+        actionSheetController.addAction(cancelAction)
+        
+        // present an actionSheet...
+        present(actionSheetController, animated: true, completion: nil)
     }
 
     func setupContent() {
+        self.title = "Products"
         do {
             rankingFetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
             productFetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+            productFetchRequest.predicate = nil
             try rankingFetchResultsController.performFetch()
             try productFetchResultsController.performFetch()
         } catch {
@@ -64,10 +87,15 @@ class RankingViewController: UIViewController {
         }
     }
 
-    func sortContent(predicate: NSPredicate, sortDescriptors: [NSSortDescriptor]) {
+    func sortContentBy(ranking: Ranking) {
+        guard let rankingName = ranking.name, let rankBy = ranking.rankBy else { return }
+        
+        self.title = rankingName
+        let sortDescriptor = NSSortDescriptor(key: rankBy, ascending: false)
+        let predicate = NSPredicate(format: "\(rankBy) > 0")
+        productFetchRequest.sortDescriptors = [sortDescriptor]
+        productFetchRequest.predicate = predicate
         do {
-            productFetchRequest.sortDescriptors = sortDescriptors
-            productFetchRequest.predicate = predicate
             try productFetchResultsController.performFetch()
             tableView.reloadData()
         } catch {
@@ -90,16 +118,6 @@ class RankingViewController: UIViewController {
 
 extension RankingViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func validateIndexPath(_ indexPath: IndexPath) -> Bool {
-        if let sections = self.productFetchResultsController.sections,
-            indexPath.section < sections.count {
-            if indexPath.row < sections[indexPath.section].numberOfObjects {
-                return true
-            }
-        }
-        return false
-    }
-    
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let sections = productFetchResultsController.sections {
             let currentSection = sections[section]
@@ -111,12 +129,7 @@ extension RankingViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "rankingCell", for: indexPath)
-        if self.validateIndexPath(indexPath) {
-            configureProductCell(cell, indexPath: indexPath)
-        } else {
-            print("Attempting to configure a cell for an indexPath that is out of bounds: \(indexPath)")
-        }
-        
+        configureProductCell(cell, indexPath: indexPath)
         return cell
     }
     
