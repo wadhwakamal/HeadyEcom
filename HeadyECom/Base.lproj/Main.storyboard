@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qqa-By-mPc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vcW-jO-mH2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -24,7 +24,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0Pk-s6-dSf">
-                                <rect key="frame" x="0.0" y="116" width="375" height="551"/>
+                                <rect key="frame" x="0.0" y="116" width="375" height="502"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="Q0H-wJ-0L7">
                                     <rect key="frame" x="0.0" y="72" width="375" height="44"/>
@@ -72,7 +72,52 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="476" y="132.68365817091455"/>
+            <point key="canvasLocation" x="815.20000000000005" y="132.68365817091455"/>
+        </scene>
+        <!--Products-->
+        <scene sceneID="Htv-pz-MDk">
+            <objects>
+                <viewController id="6T9-az-oHi" customClass="RankingViewController" customModule="HeadyECom" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0vg-88-0VX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="iY1-oy-CCI">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="rankingCell" id="1ej-Se-0ng">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1ej-Se-0ng" id="2Fg-LY-ayq">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="6T9-az-oHi" id="L23-PP-1X0"/>
+                                    <outlet property="delegate" destination="6T9-az-oHi" id="7O0-dh-Mdn"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ZUc-Q3-IIP" firstAttribute="trailing" secondItem="iY1-oy-CCI" secondAttribute="trailing" id="1y9-jy-aVH"/>
+                            <constraint firstItem="iY1-oy-CCI" firstAttribute="top" secondItem="ZUc-Q3-IIP" secondAttribute="top" id="mC4-1x-CcY"/>
+                            <constraint firstItem="iY1-oy-CCI" firstAttribute="leading" secondItem="ZUc-Q3-IIP" secondAttribute="leading" id="sZz-zV-UzY"/>
+                            <constraint firstItem="ZUc-Q3-IIP" firstAttribute="bottom" secondItem="iY1-oy-CCI" secondAttribute="bottom" id="smG-Gi-qRN"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZUc-Q3-IIP"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Products" id="ihK-2s-9kg"/>
+                    <connections>
+                        <outlet property="tableView" destination="iY1-oy-CCI" id="ena-8g-dCE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p7G-Ue-2d7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="815" y="797"/>
         </scene>
         <!--Product View Controller-->
         <scene sceneID="o6s-ft-uSL">
@@ -139,12 +184,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="chp-Za-9Lw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1132" y="129.98500749625188"/>
+            <point key="canvasLocation" x="1471.2" y="129.98500749625188"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Categories-->
         <scene sceneID="EKJ-Cp-DTf">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Qqa-By-mPc" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Categories" image="health_data" id="SLD-7d-VcS"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="9B9-Lr-IZD">
                         <rect key="frame" x="0.0" y="20" width="375" height="96"/>
@@ -157,7 +203,48 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UQ4-FP-PKN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-252" y="133"/>
+            <point key="canvasLocation" x="87.200000000000003" y="132.68365817091455"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="gxW-dw-S3a">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="vcW-jO-mH2" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yQe-oK-MFe">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Qqa-By-mPc" kind="relationship" relationship="viewControllers" id="cE2-aX-cat"/>
+                        <segue destination="8bb-gt-g0m" kind="relationship" relationship="viewControllers" id="HJh-wS-2pZ"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fnc-00-Vjp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-697" y="402"/>
+        </scene>
+        <!--Products-->
+        <scene sceneID="HRY-od-qmQ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8bb-gt-g0m" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Products" image="star" id="vZb-pl-nv6"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="gqB-i8-Hhc">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="6T9-az-oHi" kind="relationship" relationship="rootViewController" id="moB-31-pAk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="scA-qn-nSk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="87" y="797"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="health_data" width="30" height="30"/>
+        <image name="star" width="30" height="30"/>
+    </resources>
 </document>

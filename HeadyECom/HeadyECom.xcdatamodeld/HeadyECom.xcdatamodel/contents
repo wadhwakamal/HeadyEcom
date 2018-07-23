@@ -16,11 +16,11 @@
         <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="orderCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="order_count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="shares" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="taxName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="taxValue" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="viewCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="view_count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="products" inverseEntity="Category" syncable="YES"/>
         <relationship name="ranking" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ranking" inverseName="products" inverseEntity="Ranking" syncable="YES"/>
         <relationship name="variants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Variant" inverseName="product" inverseEntity="Variant" syncable="YES"/>
@@ -32,6 +32,7 @@
     </entity>
     <entity name="Ranking" representedClassName="Ranking" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rankBy" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="products" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Product" inverseName="ranking" inverseEntity="Product" syncable="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -53,8 +54,8 @@
     </entity>
     <elements>
         <element name="Category" positionX="-63" positionY="-18" width="128" height="30"/>
-        <element name="Product" positionX="-45" positionY="27" width="128" height="210"/>
-        <element name="Ranking" positionX="-18" positionY="117" width="128" height="75"/>
+        <element name="Product" positionX="-45" positionY="27" width="128" height="30"/>
+        <element name="Ranking" positionX="-18" positionY="117" width="128" height="90"/>
         <element name="Variant" positionX="-36" positionY="63" width="128" height="120"/>
     </elements>
 </model>

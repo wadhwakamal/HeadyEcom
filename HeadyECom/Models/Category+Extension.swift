@@ -170,16 +170,19 @@ extension Ranking {
                             let predicate = NSPredicate(format: "id == %@", productID)
                             
                             if let product = Category.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
-                                if let orderCount = json[kRankingsProductsOrderCountKey].int64 {
-                                    product.orderCount = orderCount
+                                if let orderCount = productJSON[kRankingsProductsOrderCountKey].int64 {
+                                    ranking.rankBy = kRankingsProductsOrderCountKey
+                                    product.order_count = orderCount
                                 }
                                 
-                                if let shares = json[kRankingsProductsSharesKey].int64 {
+                                if let shares = productJSON[kRankingsProductsSharesKey].int64 {
+                                    ranking.rankBy = kRankingsProductsSharesKey
                                     product.shares = shares
                                 }
                                 
-                                if let viewCount = json[kRankingsProductsViewCountKey].int64 {
-                                    product.viewCount = viewCount
+                                if let viewCount = productJSON[kRankingsProductsViewCountKey].int64 {
+                                    ranking.rankBy = kRankingsProductsViewCountKey
+                                    product.view_count = viewCount
                                 }
                                 
                                 ranking.addToProducts(product)
