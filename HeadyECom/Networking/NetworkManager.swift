@@ -12,14 +12,23 @@ import CoreData
 
 class NetworkManager {
     
-    class func fetchProducts() {
-        guard let jsonData = stubbedResponse("ecommerce"),
-            let json = try? JSON(data: jsonData) else { return }
+    class func fetchProducts(_ completion:@escaping (_ error: Error?) -> Void) {
         
-        saveProducts(json: json)
+        if let url = URL(string: "https://stark-spire-93433.herokuapp.com/json") {
+            URLSession.shared.dataTask(with: url, completionHandler: {(data, response, error) in
+                guard let data = data, error == nil, let json = try? JSON(data: data) else { return completion(error) }
+                saveProducts(json: json, completion: completion)
+                
+            }).resume()
+        }
+
+        //        guard let jsonData = stubbedResponse("ecommerce"),
+        //            let json = try? JSON(data: jsonData) else { return }
+        //
+        //        saveProducts(json: json)
     }
     
-    class func saveProducts(json: JSON) {
+    class func saveProducts(json: JSON, completion:@escaping (_ error: Error?) -> Void) {
         let wmoc = CoreDataManager.shared.newBackgroundContext()
         wmoc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
@@ -30,7 +39,14 @@ class NetworkManager {
             if wmoc.hasChanges {
                 try wmoc.save()
             }
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+            
         } catch {
+            DispatchQueue.main.async {
+                completion(error)
+            }            
             print(error)
         }
     }

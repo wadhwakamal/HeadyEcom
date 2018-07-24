@@ -21,6 +21,7 @@ class CategoryViewController: BaseViewController {
     // MARK: Properties
     var parentCategory: Category?
     var contentType = ContentType.none
+    var loadingView: UIView!
     
     lazy var categoryResults: NSFetchedResultsController<Category> = {
         let moc = CoreDataManager.shared.viewContext()
@@ -55,10 +56,24 @@ class CategoryViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(CategoryViewController.didTapCartBarButton))
     }
     
+    func loadingView(isHidden: Bool = false) {
+        if isHidden {
+            loadingView.isHidden = true
+            loadingView.removeFromSuperview()
+        } else {
+            let window = UIApplication.shared.keyWindow!
+            loadingView = LoadingView.instanceFromNib()
+            window.addSubview(loadingView)
+        }
+    }
+    
     // MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        if parentCategory == nil {
+            self.loadingView()
+        }
         self.setupViews()
         self.setupContent()
     }
@@ -72,7 +87,18 @@ class CategoryViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if parentCategory == nil {
-            NetworkManager.fetchProducts()
+            NetworkManager.fetchProducts({ [weak self] (error) in
+                guard let `self` = self else { return }
+                
+                if let error = error {
+                    let alertController = UIAlertController(title: "Error", message: "Unable to load data from web. Error: \(error)", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    self.loadingView(isHidden: true)
+                }
+            })
         }
     }
 }
