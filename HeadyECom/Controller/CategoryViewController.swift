@@ -63,6 +63,8 @@ class CategoryViewController: BaseViewController {
         } else {
             let window = UIApplication.shared.keyWindow!
             loadingView = LoadingView.instanceFromNib()
+            loadingView.frame = CGRect(x: window.frame.origin.x, y: window.frame.origin.y, width: window.frame.width, height: window.frame.height)
+
             window.addSubview(loadingView)
         }
     }
