@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyJSON
 
-class ProductViewController: UIViewController {
+class ProductViewController: BaseViewController {
     
     @IBOutlet weak var gradientView: GradientView!
     @IBOutlet weak var productNameLabel: UILabel!
@@ -22,7 +22,7 @@ class ProductViewController: UIViewController {
     var cartButton: UIBarButtonItem!
     
     func setupViews() {
-        cartButton = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(ProductViewController.didTapCart))
+        cartButton = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(ProductViewController.didTapCartBarButton))
         navigationItem.rightBarButtonItem = cartButton
 
         
@@ -41,13 +41,6 @@ class ProductViewController: UIViewController {
 
         tableView.register(UINib(nibName: "ProductTableViewCell", bundle: nil), forCellReuseIdentifier: "ColorCell")
         
-    }
-    
-    @objc func didTapCart() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CartVC") as! CartViewController
-        vc.title = "Cart"
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func setupContent() {
@@ -103,15 +96,14 @@ class ProductViewController: UIViewController {
                 dummyView.removeFromSuperview()
                 
                 UIView.animate(withDuration: 1.0, animations: {
-                    self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
                     self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.4, y: 1.4)
                 }, completion: {_ in
                     self.navigationItem.rightBarButtonItem!.animationZoom(scaleX: 1.0, y: 1.0)
                 })
                 
             })
-            
         })
+        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,12 +111,6 @@ class ProductViewController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = false
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -160,9 +146,6 @@ extension ProductViewController: ProductTableViewCellDelegate {
     func didTapBuyButton(variant: Variant, sender: UIButton) {
         guard let id = product.id, let variantID = variant.id else { return }
         Cart.add(productID: id, variantID: variantID)
-        
         sendToCart(sender)
-//        navigationItem.rightBarButtonItem?.addBadge(number: 1)
-        
     }
 }

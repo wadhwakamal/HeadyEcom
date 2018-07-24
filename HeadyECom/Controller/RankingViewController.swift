@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class RankingViewController: UIViewController {
+class RankingViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -40,13 +40,6 @@ class RankingViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named:"list"), style: .plain, target: self, action: #selector(RankingViewController.didTapListBarButton))
     }
     
-    @objc func didTapCartBarButton() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CartVC") as! CartViewController
-        vc.title = "Cart"
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
     @objc func didTapListBarButton() {
         showAction()
     }
@@ -106,11 +99,6 @@ class RankingViewController: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

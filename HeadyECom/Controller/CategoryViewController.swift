@@ -13,7 +13,7 @@ enum ContentType {
     case category, product, none
 }
 
-class CategoryViewController: UIViewController {
+class CategoryViewController: BaseViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -53,7 +53,6 @@ class CategoryViewController: UIViewController {
                 
             }
         }
-        self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
     }
     
     func setupContent() {
@@ -63,16 +62,9 @@ class CategoryViewController: UIViewController {
             print("Unable to fetch Category Data \(error)")
         }
     }
-    
-    @objc func didTapCart() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CartVC") as! CartViewController
-        vc.title = "Cart"
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
+
     func setupViews() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(CategoryViewController.didTapCart))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(CategoryViewController.didTapCartBarButton))
     }
     
     override func viewDidLoad() {

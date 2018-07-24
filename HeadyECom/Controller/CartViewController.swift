@@ -15,17 +15,17 @@ class CartViewController: UIViewController {
     @IBOutlet weak var totalAmountLabel: UILabel!
     @IBOutlet weak var emptyCartView: UIView!
     
-    var totalAmount: Double = 0
+//    var totalAmount: Double = 0
     
-    var amount: Double {
-        get {
-            return totalAmount
-        }
-        set {
-            totalAmount += newValue
-            totalAmountLabel.text = "TOTAL: \(totalAmount)"
-        }
-    }
+//    var amount: Double {
+//        get {
+//            return totalAmount
+//        }
+//        set {
+////            totalAmount += newValue
+//            totalAmountLabel.text = "TOTAL: \(totalAmount)"
+//        }
+//    }
     
     lazy var fetchResultsController: NSFetchedResultsController<Cart> = {
         let moc = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -52,7 +52,6 @@ class CartViewController: UIViewController {
     
     func clearCart() {
         Cart.clear()
-        print("CLEAR")
     }
     
     func setupContent() {
@@ -65,6 +64,12 @@ class CartViewController: UIViewController {
         } catch {
             print("Unable to fetch Category Data \(error)")
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        totalAmountLabel.text = "TOTAL: \(Cart.totalAmount())"
     }
     
     override func viewDidLoad() {
@@ -97,18 +102,19 @@ extension CartViewController: UITableViewDataSource, UITableViewDelegate {
     
     func configureCartCell(_ cell: CartTableViewCell, indexPath: IndexPath) {
         let cart = fetchResultsController.object(at: indexPath)
-        cell.productNameLabel.text = cart.product?.name ?? ""
-        
-        if let price = cart.variant?.price, let tax = cart.product?.taxValue {
+
+        if let price = cart.variant?.price,
+            let tax = cart.product?.taxValue,
+            let color = cart.variant?.color,
+            let name = cart.product?.name,
+            let size = cart.variant?.size {
+            
+            cell.productNameLabel.text =  name
+            cell.sizeLabel.text = size > 0 ? "\(size)" : "NA"
             cell.priceLabel.text = "\(price)"
             cell.taxLabel.text = "TAX: \(cart.product?.taxName ?? "") \(tax)"
-            self.amount = Double(price) + Double(Float(price)*tax/100)
+            cell.colorLabel.text = "\(color)"
         }
-        
-        
-        cell.colorLabel.text = "\(cart.variant?.color ?? "")"
-        cell.sizeLabel.text = cart.variant!.size > 0 ? "\(cart.variant!.size)" : "NA"
-        
         
         
     }
