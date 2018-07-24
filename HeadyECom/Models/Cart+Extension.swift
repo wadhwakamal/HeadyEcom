@@ -13,8 +13,7 @@ import CoreData
 extension Cart {
     
     class func itemCount() -> Int {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return 0 }
-        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let context = CoreDataManager.shared.newBackgroundContext()
         
         let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
         if let result = try? context.fetch(fetchRequest) {
@@ -24,20 +23,18 @@ extension Cart {
     }
     
     class func add(productID: String, variantID: String) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        
-        let moc = appDelegate.persistentContainer.newBackgroundContext()
+        let moc = CoreDataManager.shared.newBackgroundContext()
         moc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         if let cart = NSEntityDescription.insertNewObject(forEntityName: "Cart", into: moc) as? Cart {
             cart.productID = productID
             cart.variantID = variantID
             var predicate = NSPredicate(format: "id == %@", variantID)
-            if let variant = Category.fetchObjects(from: Variant.self, moc: moc, predicate: predicate)?.first {
+            if let variant = CoreDataManager.fetchObjects(from: Variant.self, moc: moc, predicate: predicate)?.first {
                 cart.variant = variant
             }
             
             predicate = NSPredicate(format: "id == %@", productID)
-            if let product = Category.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
+            if let product = CoreDataManager.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
                 cart.product = product
             }
         }
@@ -51,8 +48,7 @@ extension Cart {
     }
     
     class func totalAmount() -> Double {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return 0 }
-        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let context = CoreDataManager.shared.newBackgroundContext()
         let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
         var amount: Double = 0
         
@@ -67,8 +63,7 @@ extension Cart {
     }
     
     class func clear() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let context = CoreDataManager.shared.newBackgroundContext()
         
         let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
         if let result = try? context.fetch(fetchRequest) {

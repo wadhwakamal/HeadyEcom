@@ -11,16 +11,18 @@ import SwiftyJSON
 
 class ProductViewController: BaseViewController {
     
+    // MARK: Outlets
     @IBOutlet weak var gradientView: GradientView!
     @IBOutlet weak var productNameLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
+    // MARK: Properties
     var product: Product!
     var gradient: [CGColor]!
     var variants = [Variant]()
-    
     var cartButton: UIBarButtonItem!
     
+    // MARK: - Methods
     func setupViews() {
         cartButton = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(ProductViewController.didTapCartBarButton))
         navigationItem.rightBarButtonItem = cartButton
@@ -59,23 +61,6 @@ class ProductViewController: BaseViewController {
         
     }
     
-    func sendToCart(_ sender: UIButton) {
-        let buttonPosition : CGPoint = sender.convert(sender.bounds.origin, to: self.tableView)
-        
-        let indexPath = self.tableView.indexPathForRow(at: buttonPosition)!
-        
-        let cell = tableView.cellForRow(at: indexPath) as! ProductTableViewCell
-        
-        let imageViewPosition : CGPoint = cell.indexImageView.convert(cell.indexImageView.bounds.origin, to: self.view)
-        
-        
-        let imgViewTemp = UIImageView(frame: CGRect(x: imageViewPosition.x, y: imageViewPosition.y, width: cell.indexImageView.frame.size.width, height: cell.indexImageView.frame.size.height))
-        
-        imgViewTemp.image = cell.indexImageView.image
-        
-        animation(dummyView: imgViewTemp)
-    }
-    
     func animation(dummyView : UIView)  {
         self.view.addSubview(dummyView)
         UIView.animate(withDuration: 1.0,
@@ -106,11 +91,25 @@ class ProductViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem?.addBadge(number: Cart.itemCount())
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.prefersLargeTitles = false
+    // MARK: Actions
+    func sendToCart(_ sender: UIButton) {
+        let buttonPosition : CGPoint = sender.convert(sender.bounds.origin, to: self.tableView)
+        
+        let indexPath = self.tableView.indexPathForRow(at: buttonPosition)!
+        
+        let cell = tableView.cellForRow(at: indexPath) as! ProductTableViewCell
+        
+        let imageViewPosition : CGPoint = cell.indexImageView.convert(cell.indexImageView.bounds.origin, to: self.view)
+        
+        
+        let imgViewTemp = UIImageView(frame: CGRect(x: imageViewPosition.x, y: imageViewPosition.y, width: cell.indexImageView.frame.size.width, height: cell.indexImageView.frame.size.height))
+        
+        imgViewTemp.image = cell.indexImageView.image
+        
+        animation(dummyView: imgViewTemp)
     }
-    
+
+    // MARK: Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -118,13 +117,13 @@ class ProductViewController: BaseViewController {
         setupContent()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.prefersLargeTitles = false
     }
-
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension ProductViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return variants.count
@@ -142,6 +141,7 @@ extension ProductViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - ProductTableViewCellDelegate
 extension ProductViewController: ProductTableViewCellDelegate {
     func didTapBuyButton(variant: Variant, sender: UIButton) {
         guard let id = product.id, let variantID = variant.id else { return }

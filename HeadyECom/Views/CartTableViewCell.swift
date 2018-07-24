@@ -17,15 +17,19 @@ class CartTableViewCell: UITableViewCell {
     @IBOutlet weak var taxLabel: UILabel!
     
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    func configure(cart: Cart) {
+        if let price = cart.variant?.price,
+            let tax = cart.product?.taxValue,
+            let color = cart.variant?.color,
+            let name = cart.product?.name,
+            let size = cart.variant?.size {
+            
+            productNameLabel.text =  name
+            sizeLabel.text = size > 0 ? "\(size)" : "NA"
+            priceLabel.text = "\(price)"
+            taxLabel.text = "TAX: \(cart.product?.taxName ?? "") \(tax)"
+            colorLabel.text = "\(color)"
+        }
     }
     
 }

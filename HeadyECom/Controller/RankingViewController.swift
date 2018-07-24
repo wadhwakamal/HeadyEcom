@@ -10,16 +10,16 @@ import UIKit
 import CoreData
 
 class RankingViewController: BaseViewController {
-    
+    // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
     
+    // MARK: Properties
     let rankingFetchRequest: NSFetchRequest<Ranking> = Ranking.fetchRequest()
     let productFetchRequest: NSFetchRequest<Product> = Product.fetchRequest()
 
     lazy var productFetchResultsController: NSFetchedResultsController<Product> = {
-        let moc = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let moc = CoreDataManager.shared.viewContext()
         moc.automaticallyMergesChangesFromParent = true
-//        productFetchRequest.relationshipKeyPathsForPrefetching = ["ranking"]
         let resultsController = NSFetchedResultsController<Product>(fetchRequest: productFetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         resultsController.delegate = self
         
@@ -27,21 +27,30 @@ class RankingViewController: BaseViewController {
     }()
     
     lazy var rankingFetchResultsController: NSFetchedResultsController<Ranking> = {
-        let moc = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let moc = CoreDataManager.shared.viewContext()
         moc.automaticallyMergesChangesFromParent = true
         return NSFetchedResultsController<Ranking>(fetchRequest: rankingFetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
     }()
     
     
-    
+    // MARK: - Methods
     func setupViews() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(RankingViewController.didTapCartBarButton))
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named:"list"), style: .plain, target: self, action: #selector(RankingViewController.didTapListBarButton))
     }
     
-    @objc func didTapListBarButton() {
-        showAction()
+    func setupContent() {
+        self.title = "Products"
+        do {
+            rankingFetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            productFetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+            productFetchRequest.predicate = nil
+            try rankingFetchResultsController.performFetch()
+            try productFetchResultsController.performFetch()
+        } catch {
+            print("Unable to fetch Category Data \(error)")
+        }
     }
     
     func showAction() {
@@ -70,19 +79,6 @@ class RankingViewController: BaseViewController {
         present(actionSheetController, animated: true, completion: nil)
     }
 
-    func setupContent() {
-        self.title = "Products"
-        do {
-            rankingFetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-            productFetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-            productFetchRequest.predicate = nil
-            try rankingFetchResultsController.performFetch()
-            try productFetchResultsController.performFetch()
-        } catch {
-            print("Unable to fetch Category Data \(error)")
-        }
-    }
-
     func sortContentBy(ranking: Ranking) {
         guard let rankingName = ranking.name, let rankBy = ranking.rankBy else { return }
         
@@ -99,6 +95,12 @@ class RankingViewController: BaseViewController {
         }
     }
     
+    // MARK: Actions
+    @objc func didTapListBarButton() {
+        showAction()
+    }
+    
+    // MARK: Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -114,6 +116,7 @@ class RankingViewController: BaseViewController {
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension RankingViewController: UITableViewDataSource, UITableViewDelegate {
     
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -141,6 +144,7 @@ extension RankingViewController: UITableViewDataSource, UITableViewDelegate {
         segueToProduct(product: product)
     }
     
+    // MARK: - Segue
     func segueToProduct(product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ProductVC") as! ProductViewController
@@ -151,6 +155,7 @@ extension RankingViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - NSFetchedResultsControllerDelegate
 extension RankingViewController: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

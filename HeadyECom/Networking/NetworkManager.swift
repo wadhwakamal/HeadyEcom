@@ -12,12 +12,15 @@ import CoreData
 
 class NetworkManager {
     
-    class func fetchProducts(completion: (() -> Void)) {
+    class func fetchProducts() {
         guard let jsonData = stubbedResponse("ecommerce"),
-            let json = try? JSON(data: jsonData),
-            let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+            let json = try? JSON(data: jsonData) else { return }
         
-        let wmoc = appDelegate.persistentContainer.newBackgroundContext()
+        saveProducts(json: json)
+    }
+    
+    class func saveProducts(json: JSON) {
+        let wmoc = CoreDataManager.shared.newBackgroundContext()
         wmoc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         Category.fromJSON(json: json, moc: wmoc)
@@ -27,7 +30,6 @@ class NetworkManager {
             if wmoc.hasChanges {
                 try wmoc.save()
             }
-            completion()
         } catch {
             print(error)
         }

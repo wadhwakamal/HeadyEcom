@@ -15,13 +15,15 @@ enum ContentType {
 
 class CategoryViewController: BaseViewController {
     
+    // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
     
+    // MARK: Properties
     var parentCategory: Category?
     var contentType = ContentType.none
     
     lazy var categoryResults: NSFetchedResultsController<Category> = {
-        let moc = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let moc = CoreDataManager.shared.viewContext()
         moc.automaticallyMergesChangesFromParent = true
         
         let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
@@ -39,22 +41,8 @@ class CategoryViewController: BaseViewController {
         return resultsController
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if parentCategory == nil {
-            NetworkManager.fetchProducts { 
-                
-            }
-        }
-    }
-    
+    // MARK: - Methods
+
     func setupContent() {
         do {
             try categoryResults.performFetch()
@@ -67,22 +55,29 @@ class CategoryViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named:"shopping-cart"), style: .plain, target: self, action: #selector(CategoryViewController.didTapCartBarButton))
     }
     
+    // MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupViews()
         self.setupContent()
-        
-        
-        
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if parentCategory == nil {
+            NetworkManager.fetchProducts()
+        }
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -139,6 +134,8 @@ extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    
+    // MARK: - Segues
     func segueToSubCategory(category: Category) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "CategoryVC") as! CategoryViewController
@@ -157,6 +154,7 @@ extension CategoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - NSFetchedResultsControllerDelegate
 extension CategoryViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()

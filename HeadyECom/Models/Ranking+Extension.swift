@@ -33,7 +33,7 @@ extension Ranking {
                             let productID = "\(productJSON[kRankingsProductsInternalIdentifierKey].intValue)"
                             let predicate = NSPredicate(format: "id == %@", productID)
                             
-                            if let product = Category.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
+                            if let product = CoreDataManager.fetchObjects(from: Product.self, moc: moc, predicate: predicate)?.first {
                                 if let orderCount = productJSON[kRankingsProductsOrderCountKey].int64 {
                                     ranking.rankBy = kRankingsProductsOrderCountKey
                                     product.order_count = orderCount

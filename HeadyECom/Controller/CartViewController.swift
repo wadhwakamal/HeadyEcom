@@ -11,24 +11,14 @@ import CoreData
 
 class CartViewController: UIViewController {
     
+    // MARK: Outlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var totalAmountLabel: UILabel!
     @IBOutlet weak var emptyCartView: UIView!
     
-//    var totalAmount: Double = 0
-    
-//    var amount: Double {
-//        get {
-//            return totalAmount
-//        }
-//        set {
-////            totalAmount += newValue
-//            totalAmountLabel.text = "TOTAL: \(totalAmount)"
-//        }
-//    }
-    
+    // MARK: Properties
     lazy var fetchResultsController: NSFetchedResultsController<Cart> = {
-        let moc = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let moc = CoreDataManager.shared.viewContext()
         moc.automaticallyMergesChangesFromParent = true
         
         let fetchRequest: NSFetchRequest<Cart> = Cart.fetchRequest()
@@ -40,6 +30,7 @@ class CartViewController: UIViewController {
         return resultsController
     }()
     
+    // MARK: Actions
     @IBAction func didTapBuyButton(_ sender: Any) {
         let alertController = UIAlertController(title: "Thankyou", message: "Purchase is successful", preferredStyle: .alert)
 
@@ -50,6 +41,7 @@ class CartViewController: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    // MARK: - Methods
     func clearCart() {
         Cart.clear()
     }
@@ -66,12 +58,7 @@ class CartViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        totalAmountLabel.text = "TOTAL: \(Cart.totalAmount())"
-    }
-    
+    // MARK: - Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -79,12 +66,14 @@ class CartViewController: UIViewController {
         setupContent()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        totalAmountLabel.text = "TOTAL: \(Cart.totalAmount())"
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension CartViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let sections = fetchResultsController.sections {
@@ -102,21 +91,7 @@ extension CartViewController: UITableViewDataSource, UITableViewDelegate {
     
     func configureCartCell(_ cell: CartTableViewCell, indexPath: IndexPath) {
         let cart = fetchResultsController.object(at: indexPath)
-
-        if let price = cart.variant?.price,
-            let tax = cart.product?.taxValue,
-            let color = cart.variant?.color,
-            let name = cart.product?.name,
-            let size = cart.variant?.size {
-            
-            cell.productNameLabel.text =  name
-            cell.sizeLabel.text = size > 0 ? "\(size)" : "NA"
-            cell.priceLabel.text = "\(price)"
-            cell.taxLabel.text = "TAX: \(cart.product?.taxName ?? "") \(tax)"
-            cell.colorLabel.text = "\(color)"
-        }
-        
-        
+        cell.configure(cart: cart)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -124,6 +99,7 @@ extension CartViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+// MARK: - NSFetchedResultsControllerDelegate
 extension CartViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()

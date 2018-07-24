@@ -32,21 +32,7 @@ extension Category {
         }
     }
     
-    static func fetchObjects<T: NSManagedObject>(from entityClass: T.Type, moc: NSManagedObjectContext, predicate: NSPredicate? = nil) -> [T]? {
-        
-        let entityName = String(describing: T.self)
-        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
-        fetchRequest.predicate = predicate
-        
-        do {
-            let result = try moc.fetch(fetchRequest)
-            return result
-        } catch {
-            print("Data not found")
-        }
-        return nil
-    }
+    
     
     @discardableResult
     static func fromJSON(json: JSON, moc: NSManagedObjectContext) -> [Category] {
@@ -64,6 +50,7 @@ extension Category {
                 category.id = "\(categoryJSON[kCategoriesInternalIdentifierKey].intValue)"
                 category.name = categoryJSON[kCategoriesNameKey].string
                 
+                // Persisting Products
                 if let productsJSON = categoryJSON[kCategoriesProductsKey].array, productsJSON.isNotEmpty {
                     for productJSON in productsJSON {
                         if let product = NSEntityDescription.insertNewObject(forEntityName: "Product", into: moc) as? Product {
@@ -73,14 +60,16 @@ extension Category {
                     }
                 }
                 
+                // Persisting Subcategories
                 if let subCategoriesJSON = categoryJSON[kCategoriesChildCategoriesKey].array, subCategoriesJSON.isNotEmpty {
                     let predicate = NSPredicate(format: "id IN %@", subCategoriesJSON.map { "\($0.intValue)" })
-                    if let subCategories = fetchObjects(from: Category.self, moc: moc, predicate: predicate), subCategories.isNotEmpty {
+                    if let subCategories = CoreDataManager.fetchObjects(from: Category.self, moc: moc, predicate: predicate), subCategories.isNotEmpty {
                         for subCategory in subCategories {
                             subCategory.parentID = category.id
                             category.addToSubCategory(subCategory)
                         }
                     } else {
+                        // Pusing Parent category to stack to allow them to have child categories once child categories are added in context
                         categoryStack.push(categoryJSON)
                     }
                 }
