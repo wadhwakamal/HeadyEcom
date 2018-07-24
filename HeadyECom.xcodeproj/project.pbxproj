@@ -175,27 +175,13 @@
 		7B46B3A221048936005E03E4 /* HeadyECom */ = {
 			isa = PBXGroup;
 			children = (
-				7B80CD6B21067B7400BD1860 /* CartTableViewCell.swift */,
-				7B80CD6C21067B7400BD1860 /* CartTableViewCell.xib */,
-				7B80CD6921067A3600BD1860 /* CartViewController.swift */,
-				7BA2975E21063ABB009C37C3 /* RankingViewController.swift */,
-				7BA2975A2106050A009C37C3 /* ProductTableViewCell.swift */,
-				7BA2975B2106050A009C37C3 /* ProductTableViewCell.xib */,
-				7B6E04A72105DBC100DC5C36 /* Fonts */,
-				7B46B3FF2104BED1005E03E4 /* SwiftExtensions.swift */,
-				7B6E04A82105E4AB00DC5C36 /* Gradient.swift */,
-				7B46B3F82104B9DB005E03E4 /* Models */,
 				7B46B3A321048936005E03E4 /* AppDelegate.swift */,
-				7B6E049A2105CF2200DC5C36 /* ProductViewController.swift */,
-				7B46B3A521048936005E03E4 /* CategoryViewController.swift */,
-				7B46B3F42104B8C6005E03E4 /* NetworkManager.swift */,
-				7B46B3A721048936005E03E4 /* Main.storyboard */,
-				7B46B3AD21048936005E03E4 /* Assets.xcassets */,
-				7B46B3AF21048936005E03E4 /* LaunchScreen.storyboard */,
-				7B46B3B221048936005E03E4 /* Info.plist */,
-				7B46B3AA21048936005E03E4 /* HeadyECom.xcdatamodeld */,
-				7B6E04AA2105E4E100DC5C36 /* gradient.json */,
-				7B46B3F62104B90E005E03E4 /* ecommerce.json */,
+				7B46B3F82104B9DB005E03E4 /* Models */,
+				7B656F632106F84000FF17B2 /* Views */,
+				7B656F622106F82F00FF17B2 /* Controller */,
+				7B656F642106F94500FF17B2 /* Resources */,
+				7B656F652106F98300FF17B2 /* Helper */,
+				7B656F662106F98F00FF17B2 /* Networking */,
 			);
 			path = HeadyECom;
 			sourceTree = "<group>";
@@ -221,9 +207,71 @@
 		7B46B3F82104B9DB005E03E4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7B46B3AA21048936005E03E4 /* HeadyECom.xcdatamodeld */,
 				7B46B3FD2104BB05005E03E4 /* Category+Extension.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		7B656F622106F82F00FF17B2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7B80CD6921067A3600BD1860 /* CartViewController.swift */,
+				7BA2975E21063ABB009C37C3 /* RankingViewController.swift */,
+				7B6E049A2105CF2200DC5C36 /* ProductViewController.swift */,
+				7B46B3A521048936005E03E4 /* CategoryViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7B656F632106F84000FF17B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7B46B3A721048936005E03E4 /* Main.storyboard */,
+				7B46B3AF21048936005E03E4 /* LaunchScreen.storyboard */,
+				7B80CD6B21067B7400BD1860 /* CartTableViewCell.swift */,
+				7B80CD6C21067B7400BD1860 /* CartTableViewCell.xib */,
+				7BA2975A2106050A009C37C3 /* ProductTableViewCell.swift */,
+				7BA2975B2106050A009C37C3 /* ProductTableViewCell.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7B656F642106F94500FF17B2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7B656F672106F99A00FF17B2 /* Stub */,
+				7B6E04A72105DBC100DC5C36 /* Fonts */,
+				7B46B3AD21048936005E03E4 /* Assets.xcassets */,
+				7B46B3B221048936005E03E4 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7B656F652106F98300FF17B2 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				7B46B3FF2104BED1005E03E4 /* SwiftExtensions.swift */,
+				7B6E04A82105E4AB00DC5C36 /* Gradient.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		7B656F662106F98F00FF17B2 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				7B46B3F42104B8C6005E03E4 /* NetworkManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		7B656F672106F99A00FF17B2 /* Stub */ = {
+			isa = PBXGroup;
+			children = (
+				7B6E04AA2105E4E100DC5C36 /* gradient.json */,
+				7B46B3F62104B90E005E03E4 /* ecommerce.json */,
+			);
+			path = Stub;
 			sourceTree = "<group>";
 		};
 		7B6E049C2105DB9D00DC5C36 /* EBGaramond */ = {
@@ -650,7 +698,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4F9L26E329;
-				INFOPLIST_FILE = HeadyECom/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HeadyECom/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.kamalwadhwa.HeadyECom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -666,7 +714,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4F9L26E329;
-				INFOPLIST_FILE = HeadyECom/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/HeadyECom/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.kamalwadhwa.HeadyECom;
 				PRODUCT_NAME = "$(TARGET_NAME)";

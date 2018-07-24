@@ -49,7 +49,7 @@ class CategoryViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if parentCategory == nil {
-            NetworkManager.fetchProducts { [weak self] in
+            NetworkManager.fetchProducts { 
                 
             }
         }
